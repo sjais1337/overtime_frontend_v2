@@ -25,7 +25,7 @@ export const loadBlockChainDataAndCheckAdmin = async () => {
     const infuraProvider = new ethers.InfuraProvider("sepolia", INFURA_API);
     const signer = infuraProvider.getSigner();
     
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     const admin = await contract.admin();
     const caller = await signer.getAddress();
     console.log(provider.getBlockNumber())
