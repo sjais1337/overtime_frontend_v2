@@ -1,46 +1,40 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import Web3 from "web3";
 import Overtime from "@/abi/Overtime.json";
 
 const CONTRACT_ABI = Overtime;
-const CONTRACT_ADDRESS = "0xB04Df08ff4360776D2494D892ba0E2AA930a1391";
+const CONTRACT_ADDRESS = "0xB04Df08ff4360776D2494D892ba0E2AA930a1391"; // Sepolia contract
 
 export const loadWeb3Metamask = async () => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-  } else if (window.web3) {
-    window.web3 = new Web3(window.web3.currentProvider);
+    await window.ethereum.enable();
   } else {
-    throw new Error("Non-Ethereum browser detected. Please install MetaMask!");
+    console.error("Non-Ethereum browser detected. Consider using MetaMask!");
   }
 };
 
 export const loadBlockChainDataAndCheckAdmin = async () => {
-  await loadWeb3Metamask();
   const web3 = window.web3;
-
   try {
     const accounts = await web3.eth.getAccounts();
     const caller = accounts[0];
-    console.log("Caller:", caller);
+    console.log("caller", caller);
 
-    const networkId = await web3.eth.net.getId();
-    console.log("Network ID:", networkId);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    
+    const adminAddress = await contract.admin();
 
-    const overtimeContract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-
-    const admin = await overtimeContract.methods.admin().call();
-    console.log("Contract Admin:", admin);
-
-    if (caller.toLowerCase() === admin.toLowerCase()) {
-      console.log("Access granted to admin.");
-      // Your logic for admin access
+    if (caller === adminAddress) {
+      console.log("Admin access granted");
+      return true; 
     } else {
-      console.log("Access denied. You are not the admin.");
-      // Your logic for non-admin access
+      console.warn("You are not authorized to access this page");
+      return false; 
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error checking admin status:", error);
+    return false;
   }
 };
