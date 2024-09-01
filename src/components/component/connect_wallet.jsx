@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { ConnectWallet } from "@/lib/connection"
 
 export function ConnectWalletButton() {
   const [isLoading, setIsLoading] = useState(false)
