@@ -4,6 +4,6 @@ import { ConnectWalletButton } from "@/components/component/connect_wallet";
 
 export default function Home() {
   return (
-    <ConnectWalletButton />
+    <Admin />
   );
 }

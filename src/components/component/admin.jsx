@@ -117,11 +117,11 @@ export function Admin() {
           </Link>
           <div className="flex items-center gap-4">
             <div
-              className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
+              className="flex items-center gap-1 rounded-md bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
               <UserIcon className="h-4 w-4" />
               <span>Admin</span>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button variant="ghost" size="icon" className="rounded-lg">
               <BellIcon className="h-5 w-5" />
               <span className="sr-only">Notifications</span>
             </Button>
@@ -148,8 +148,8 @@ export function Admin() {
                           task.skillLevel === "Beginner"
                             ? "secondary"
                             : task.skillLevel === "Intermediate"
-                            ? "primary"
-                            : "success"
+                              ? "primary"
+                              : "success"
                         }>
                         {task.skillLevel}
                       </Badge>
@@ -262,8 +262,8 @@ export function Admin() {
                     selectedTask?.skillLevel === "Beginner"
                       ? "secondary"
                       : selectedTask?.skillLevel === "Intermediate"
-                      ? "primary"
-                      : "success"
+                        ? "primary"
+                        : "success"
                   }>
                   {selectedTask?.skillLevel}
                 </Badge>
