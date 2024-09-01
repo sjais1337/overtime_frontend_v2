@@ -91,7 +91,7 @@ export function User() {
           </Link>
           <div className="flex items-center gap-4">
             <div
-              className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
+              className="flex items-center gap-1 rounded-lg bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
               <UserIcon className="h-4 w-4" />
               <span>User</span>
             </div>
