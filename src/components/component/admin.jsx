@@ -1,20 +1,108 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem } from "@/components/ui/select"
 
 export function Admin() {
+  const [tasks, setTasks] = useState([
+    {
+      title: "Design Landing Page",
+      skillLevel: "Beginner",
+      estimatedHours: 4,
+      wage: 15,
+      deadline: "2023-06-30",
+      description: "Design a modern and responsive landing page for the company website.",
+    },
+    {
+      title: "Develop API Endpoints",
+      skillLevel: "Intermediate",
+      estimatedHours: 8,
+      wage: 25,
+      deadline: "2023-07-15",
+      description: "Implement RESTful API endpoints for the backend services.",
+    },
+    {
+      title: "Implement Authentication",
+      skillLevel: "Advanced",
+      estimatedHours: 12,
+      wage: 35,
+      deadline: "2023-08-01",
+      description: "Integrate a secure authentication system with social login options.",
+    },
+    {
+      title: "Write Documentation",
+      skillLevel: "Beginner",
+      estimatedHours: 2,
+      wage: 20,
+      deadline: "2023-06-15",
+      description:
+        "Create comprehensive documentation for the project, including user guides and technical specifications.",
+    },
+  ])
+  const [onChainCost, setOnChainCost] = useState(0)
+  const [statistics, setStatistics] = useState({
+    totalTasks: 0,
+    completedTasks: 0,
+    pendingTasks: 0,
+    totalHours: 0,
+    totalWage: 0,
+  })
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("YOUR_API_URL")
+        const data = await response.json()
+        setOnChainCost(data.onChainCost)
+        setStatistics(data.statistics)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
+    }
+    fetchData()
+  }, [])
+  const handleAddTask = (task) => {
+    setTasks([...tasks, task])
+  }
+  const [selectedTask, setSelectedTask] = useState(null)
+  const handleViewTask = (task) => {
+    setSelectedTask(task)
+  }
+  const [newTask, setNewTask] = useState({
+    title: "",
+    skillLevel: "beginner",
+    estimatedHours: 0,
+    wage: 0,
+    deadline: "",
+    description: "",
+  })
+  const handleNewTaskChange = (field, value) => {
+    setNewTask({ ...newTask, [field]: value })
+  }
+  const handleSaveTask = () => {
+    handleAddTask(newTask)
+    setNewTask({
+      title: "",
+      skillLevel: "beginner",
+      estimatedHours: 0,
+      wage: 0,
+      deadline: "",
+      description: "",
+    })
+    setIsAddTaskOpen(false)
+  }
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false)
+  const [visibleTasks, setVisibleTasks] = useState(4)
+  const handleViewMore = () => {
+    setVisibleTasks(tasks.length)
+  }
   return (
     (<div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
@@ -31,7 +119,7 @@ export function Admin() {
             <div
               className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
               <UserIcon className="h-4 w-4" />
-              <span>User123</span>
+              <span>Admin</span>
             </div>
             <Button variant="ghost" size="icon" className="rounded-full">
               <BellIcon className="h-5 w-5" />
@@ -41,139 +129,170 @@ export function Admin() {
         </div>
       </header>
       <main className="container flex-1 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Tasks</h1>
-          <Button>
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Add Task
-          </Button>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Badge variant="secondary">Beginner</Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>4 hrs</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div className="text-lg font-medium">Design Landing Page</div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <DollarSignIcon className="h-4 w-4" />
-                  <span>$15/hr</span>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>2023-06-30</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">
-                View Task
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Tasks</h1>
+              <Button onClick={() => setIsAddTaskOpen(true)}>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add Task
               </Button>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Badge>Intermediate</Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>8 hrs</span>
-                </div>
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {tasks.slice(0, visibleTasks).map((task, index) => (
+                <Card key={index}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <Badge
+                        variant={
+                          task.skillLevel === "Beginner"
+                            ? "secondary"
+                            : task.skillLevel === "Intermediate"
+                            ? "primary"
+                            : "success"
+                        }>
+                        {task.skillLevel}
+                      </Badge>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <ClockIcon className="h-4 w-4" />
+                        <span>{task.estimatedHours} hrs</span>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="grid gap-2">
+                    <div className="text-lg font-medium">{task.title}</div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <DollarSignIcon className="h-4 w-4" />
+                        <span>${task.wage}/hr</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <CalendarIcon className="h-4 w-4" />
+                        <span>{task.deadline}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" size="sm" onClick={() => handleViewTask(task)}>
+                      View Task
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+            {tasks.length > 4 && (
+              <div className="mt-4 flex justify-center">
+                <Button variant="outline" onClick={handleViewMore}>
+                  View More
+                </Button>
               </div>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div className="text-lg font-medium">Develop API Endpoints</div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <DollarSignIcon className="h-4 w-4" />
-                  <span>$25/hr</span>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>2023-07-15</span>
-                </div>
+            )}
+          </div>
+          <div>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            </div>
+            <div className="mt-6 grid gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>On-Chain Cost</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-4xl font-bold">${onChainCost.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Total Tasks</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-4xl font-bold">{statistics.totalTasks}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Completed Tasks</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-4xl font-bold">{statistics.completedTasks}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pending Tasks</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-4xl font-bold">{statistics.pendingTasks}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Total Hours</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-4xl font-bold">{statistics.totalHours}</div>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">
-                View Task
-              </Button>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Badge variant="success">Advanced</Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>12 hrs</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div className="text-lg font-medium">Implement Authentication</div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <DollarSignIcon className="h-4 w-4" />
-                  <span>$35/hr</span>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>2023-08-01</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">
-                View Task
-              </Button>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Badge variant="secondary">Beginner</Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>2 hrs</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="grid gap-2">
-              <div className="text-lg font-medium">Write Documentation</div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <DollarSignIcon className="h-4 w-4" />
-                  <span>$20/hr</span>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>2023-06-15</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" size="sm">
-                View Task
-              </Button>
-            </CardFooter>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Total Wage</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-4xl font-bold">${statistics.totalWage.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </main>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="fixed bottom-4 right-4 z-50">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Add Task
-          </Button>
-        </DialogTrigger>
+      <Dialog
+        open={selectedTask !== null}
+        onOpenChange={(open) => setSelectedTask(open ? selectedTask : null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{selectedTask?.title}</DialogTitle>
+          </DialogHeader>
+          <div>
+            <div className="grid gap-4">
+              <div className="flex items-center justify-between">
+                <Badge
+                  variant={
+                    selectedTask?.skillLevel === "Beginner"
+                      ? "secondary"
+                      : selectedTask?.skillLevel === "Intermediate"
+                      ? "primary"
+                      : "success"
+                  }>
+                  {selectedTask?.skillLevel}
+                </Badge>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <ClockIcon className="h-4 w-4" />
+                  <span>{selectedTask?.estimatedHours} hrs</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <DollarSignIcon className="h-4 w-4" />
+                  <span>${selectedTask?.wage}/hr</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span>{selectedTask?.deadline}</span>
+                </div>
+              </div>
+              <div className="text-sm text-muted-foreground">{selectedTask?.description}</div>
+            </div>
+          </div>
+          <DialogFooter>
+            <div>
+              <Button variant="ghost">Close</Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isAddTaskOpen} onOpenChange={(open) => setIsAddTaskOpen(open)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Add New Task</DialogTitle>
@@ -182,11 +301,26 @@ export function Admin() {
             <form className="grid gap-4">
               <div className="grid gap-1">
                 <Label htmlFor="title">Title</Label>
-                <Input id="title" placeholder="Enter task title" />
+                <Input
+                  id="title"
+                  placeholder="Enter task title"
+                  value={newTask.title}
+                  onChange={(e) => handleNewTaskChange("title", e.target.value)} />
+              </div>
+              <div className="grid gap-1">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Enter task description"
+                  value={newTask.description}
+                  onChange={(e) => handleNewTaskChange("description", e.target.value)} />
               </div>
               <div className="grid gap-1">
                 <Label htmlFor="skill-level">Skill Level</Label>
-                <Select id="skill-level">
+                <Select
+                  id="skill-level"
+                  value={newTask.skillLevel}
+                  onValueChange={(e) => handleNewTaskChange("skillLevel", e.target.value)}>
                   <SelectContent>
                     <SelectItem value="beginner">Beginner</SelectItem>
                     <SelectItem value="intermediate">Intermediate</SelectItem>
@@ -196,15 +330,29 @@ export function Admin() {
               </div>
               <div className="grid gap-1">
                 <Label htmlFor="estimated-hours">Estimated Hours</Label>
-                <Input id="estimated-hours" type="number" placeholder="Enter estimated hours" />
+                <Input
+                  id="estimated-hours"
+                  type="number"
+                  placeholder="Enter estimated hours"
+                  value={newTask.estimatedHours}
+                  onChange={(e) => handleNewTaskChange("estimatedHours", Number(e.target.value))} />
               </div>
               <div className="grid gap-1">
                 <Label htmlFor="minimum-wage">Minimum Wage</Label>
-                <Input id="minimum-wage" type="number" placeholder="Enter minimum wage" />
+                <Input
+                  id="minimum-wage"
+                  type="number"
+                  placeholder="Enter minimum wage"
+                  value={newTask.wage}
+                  onChange={(e) => handleNewTaskChange("wage", Number(e.target.value))} />
               </div>
               <div className="grid gap-1">
                 <Label htmlFor="deadline">Deadline</Label>
-                <Input id="deadline" type="date" />
+                <Input
+                  id="deadline"
+                  type="date"
+                  value={newTask.deadline}
+                  onChange={(e) => handleNewTaskChange("deadline", e.target.value)} />
               </div>
             </form>
           </div>
@@ -212,7 +360,9 @@ export function Admin() {
             <div>
               <Button variant="ghost">Cancel</Button>
             </div>
-            <Button type="submit">Save Task</Button>
+            <Button type="submit" onClick={handleSaveTask}>
+              Save Task
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
