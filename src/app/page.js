@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { loadWeb3Metamask,loadBlockChainDataAndCheckAdmin } from "@/lib/connection";
+import { loadBlockChainDataAndCheckAdmin } from "@/lib/connection";
 import { Admin } from "@/components/component/admin";
 import { User } from "@/components/component/user";
 import { ConnectWalletButton } from "@/components/component/connect_wallet";
@@ -11,8 +11,7 @@ export default function Page() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const loadBlockchainData = async () => {
-      await loadWeb3Metamask(); 
+    const loadBlockchainData = async () => { 
       const adminStatus = await loadBlockChainDataAndCheckAdmin(); 
       setIsAdmin(adminStatus);
       setIsConnected(true);

@@ -11,7 +11,7 @@ export const loadWeb3Metamask = async () => {
       throw new Error("MetaMask is not installed.");
     }
     
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.BrowserProvider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     return provider.getSigner();
   } catch (error) {
@@ -22,13 +22,13 @@ export const loadWeb3Metamask = async () => {
 
 export const loadBlockChainDataAndCheckAdmin = async () => {
   try {
-    const infuraProvider = new ethers.providers.InfuraProvider("sepolia", INFURA_API);
+    const infuraProvider = new ethers.InfuraProvider("sepolia", INFURA_API);
     const signer = infuraProvider.getSigner();
     
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     const admin = await contract.admin();
     const caller = await signer.getAddress();
-
+    console.log(provider.getBlockNumber())
     return caller.toLowerCase() === admin.toLowerCase();
   } catch (error) {
     console.error("Error loading blockchain data or checking admin status:", error.message || error);
