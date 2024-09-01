@@ -1,40 +1,37 @@
 import { Contract, ethers } from "ethers";
-import Web3 from "web3";
 import Overtime from "@/abi/Overtime.json";
 
 const CONTRACT_ABI = Overtime;
-const CONTRACT_ADDRESS = "0xB04Df08ff4360776D2494D892ba0E2AA930a1391"; // Sepolia contract
+const CONTRACT_ADDRESS = "0xB04Df08ff4360776D2494D892ba0E2AA930a1391";
+const INFURA_API = "8409f54447114f4ab2264b1f9ae7bdab";
 
 export const loadWeb3Metamask = async () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    await window.ethereum.enable();
-  } else {
-    console.error("Non-Ethereum browser detected. Consider using MetaMask!");
+  try {
+    if (!window.ethereum) {
+      throw new Error("MetaMask is not installed.");
+    }
+    
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    return provider.getSigner();
+  } catch (error) {
+    console.error("Error loading Web3 with MetaMask:", error.message || error);
+    throw error; 
   }
 };
 
 export const loadBlockChainDataAndCheckAdmin = async () => {
-  const web3 = window.web3;
   try {
-    const accounts = await web3.eth.getAccounts();
-    const caller = accounts[0];
-    console.log("caller", caller);
-
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    const infuraProvider = new ethers.providers.InfuraProvider("sepolia", INFURA_API);
+    const signer = infuraProvider.getSigner();
     
-    const adminAddress = await contract.admin();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    const admin = await contract.admin();
+    const caller = await signer.getAddress();
 
-    if (caller === adminAddress) {
-      console.log("Admin access granted");
-      return true; 
-    } else {
-      console.warn("You are not authorized to access this page");
-      return false; 
-    }
+    return caller.toLowerCase() === admin.toLowerCase();
   } catch (error) {
-    console.error("Error checking admin status:", error);
-    return false;
+    console.error("Error loading blockchain data or checking admin status:", error.message || error);
+    return false; 
   }
 };
