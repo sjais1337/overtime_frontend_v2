@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label"
-import { getUserAccount, getAdmin } from "@/lib/connection" // Removed getContract since it wasn't used
+import { getUserAccount, getAdmin } from "@/lib/connection" 
 
 export default function Page() {
   const [userId,setUserId] = useState(null);

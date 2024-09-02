@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem } from "@/components/ui/select"
-import { getUserAccount, getAdmin, getContract } from "@/lib/connection"
+import { getUserAccount, getAdmin } from "@/lib/connection"
 
 export default function Page() {
   const [tasks, setTasks] = useState([

@@ -20,12 +20,12 @@ export default function Page() {
       setWeb3(new Web3(window.ethereum));
 
       if (window.ethereum.isMetaMask) {
-        setProvider('Connected to Ethereum with MetaMask.');
+        console.log('Connected to Ethereum with MetaMask.');
       } else {
-        setProvider('Non-MetaMask Ethereum provider detected.');
+        console.log('Non-MetaMask Ethereum provider detected.');
       }
     } else {
-      setWarning('Please install MetaMask');
+      console.log('Please install MetaMask');
       setAccountButtonDisabled(true);
     }
   }, []);
