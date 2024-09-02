@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -10,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem } from "@/components/ui/select"
+import { getUserAccount, getAdmin, getContract } from "@/lib/connection"
 
 export default function Page() {
   const [tasks, setTasks] = useState([
@@ -55,19 +57,24 @@ export default function Page() {
     totalHours: 0,
     totalWage: 0,
   })
+
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("YOUR_API_URL")
-        const data = await response.json()
-        setOnChainCost(data.onChainCost)
-        setStatistics(data.statistics)
+        const userAccount = await getUserAccount();
+        const adminAccount = await getAdmin();
+        console.log(adminAccount);
+        if (userAccount !== adminAccount) {
+          router.push('/user');
+        }
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error("Error fetching accounts:", error)
       }
     }
-    fetchData()
-  }, [])
+    fetchData();
+  }, [router])
   const handleAddTask = (task) => {
     setTasks([...tasks, task])
   }
