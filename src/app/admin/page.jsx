@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem } from "@/components/ui/select"
 
-export function Admin() {
+export default function Page() {
   const [tasks, setTasks] = useState([
     {
       title: "Design Landing Page",

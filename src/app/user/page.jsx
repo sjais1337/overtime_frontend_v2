@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
@@ -8,8 +9,10 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label"
+import { getUserAccount, getAdmin } from "@/lib/connection" // Removed getContract since it wasn't used
 
-export function User() {
+export default function Page() {
+  const [userId,setUserId] = useState(null);
   const [tasks, setTasks] = useState([
     {
       title: "Design Landing Page",
@@ -56,19 +59,25 @@ export function User() {
     workHoursAvailable: 0,
     minWage: 0,
   })
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("YOUR_API_URL")
-        const data = await response.json()
-        setStatistics(data.statistics)
-        setUserProfile(data.userProfile)
+        const userAccount = await getUserAccount();
+        setUserId(userAccount);
+        const adminAccount = await getAdmin();
+        console.log(adminAccount);
+        if (userAccount === adminAccount) {
+          router.push('/admin');
+        }
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error("Error fetching accounts:", error)
       }
     }
-    fetchData()
-  }, [])
+    fetchData();
+  }, [router])
+
   const [selectedTask, setSelectedTask] = useState(null)
   const handleViewTask = (task) => {
     setSelectedTask(task)
@@ -93,7 +102,7 @@ export function User() {
             <div
               className="flex items-center gap-1 rounded-lg bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
               <UserIcon className="h-4 w-4" />
-              <span>User</span>
+              <span>{userId}</span>
             </div>
             <Button variant="ghost" size="icon" className="rounded-full">
               <BellIcon className="h-5 w-5" />
@@ -119,8 +128,8 @@ export function User() {
                             task.skillLevel === "Beginner"
                               ? "secondary"
                               : task.skillLevel === "Intermediate"
-                              ? "primary"
-                              : "success"
+                                ? "primary"
+                                : "success"
                           }>
                           {task.skillLevel}
                         </Badge>
@@ -262,8 +271,8 @@ export function User() {
                       selectedTask?.skillLevel === "Beginner"
                         ? "secondary"
                         : selectedTask?.skillLevel === "Intermediate"
-                        ? "primary"
-                        : "success"
+                          ? "primary"
+                          : "success"
                     }>
                     {selectedTask?.skillLevel}
                   </Badge>
