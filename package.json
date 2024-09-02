@@ -19,6 +19,7 @@
     "ethers": "^6.13.2",
     "lucide-react": "^0.437.0",
     "next": "14.2.7",
+    "overtime_frontend_v2": "file:",
     "react": "^18.3.1",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.2",
