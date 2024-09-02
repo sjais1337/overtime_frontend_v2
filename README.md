@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ReadMe
+
+## Project Overview
+
+This project aims to develop a decentralized blockchain-based platform for automating task allocation and payment processing. Workers register with their availability, expertise, and wage requirements, while tasks are managed by an Admin. All task allocations and payments are handled on-chain via smart contracts, ensuring transparency and trust. It uses MetaMask for managing accounts securely, and interacting with the Ethereum blockchain.
+
+### Overview
+
+Create a blockchain-based system that efficiently matches workers with tasks based on predefined criteria, automates task allocation, and processes payments securely.
+
+## Features
+
+- *Worker Registration*: Register with availability, expertise, and wage preferences, linking wallets for payments.
+- *Admin Task Management*: Add tasks with specific requirements, including time, expertise, and wage.
+- *On-Chain Task Allocation*: Automated, constraint-based task assignment via smart contracts.
+- *Smart Contract Execution*: Automatic payment processing post-task completion.
+- *MetaMask Integration:* Users can establish their identities using MetaMask web-extension.
+
+### Technology Stack
+
+- *Frontend:* Next.js, TailwindCSS
+- *Backend:* Node.js
+- *Smart Contracts:* Solidity
+- *Wallet:* MetaMask
+- *Blockchain:* Ethereum Sepolia Testnet
+- *RPC Provider:* Infura
+
+This project uses *Next.js* for building a modern, server-side rendered frontend. *Web3.js* connects the application to the Ethereum blockchain, interacting with MetaMask for account management and smart contract transactions. *Tailwind CSS* provides a utility-first approach to styling, ensuring a responsive and visually consistent UI. MetaMask serves as the wallet provider for secure Ethereum interactions, while Infura is used as the RPC provider to connect to the Sepolia testnet.
 
 ## Getting Started
 
-First, run the development server:
+To start the development server, use one of the following commands:
 
-```bash
+bash
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+ 
+Once the server is running, open [http://localhost:3000](http://localhost:3000/) in your browser to view your application.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Deployment
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<To Insert>
